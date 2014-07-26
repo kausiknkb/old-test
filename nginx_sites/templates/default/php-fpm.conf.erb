@@ -1,0 +1,30 @@
+server {
+    listen       80;
+    server_name <%= @site['domain'] %>;
+    root <%= @site['dir'] %>;
+
+    access_log /var/log/nginx/<%= @site['name'] %>.access.log;
+    error_log /var/log/nginx/<%= @site['name'] %>.error.log;
+
+    location / {
+        index  index.php index.html index.htm;
+        try_files $uri $uri/ /index.php?$args;
+    }
+
+    # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+    #
+    location ~ \.php$ {
+        fastcgi_pass   127.0.0.1:9000;
+        fastcgi_index  index.php;
+        fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+        fastcgi_intercept_errors on;
+        include    fastcgi_params;
+
+        proxy_redirect off;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_set_header X-Forwarded-Server $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}

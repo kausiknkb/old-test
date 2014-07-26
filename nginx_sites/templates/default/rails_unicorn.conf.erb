@@ -1,0 +1,28 @@
+upstream <%= @site['name'] %>.unicorn {
+  server unix:<%= @document_root %>/shared/sockets/unicorn.sock;
+}
+
+server {
+  listen 80;
+  server_name <%= @site['domain'] %>;
+
+  access_log /var/log/nginx/<%= @site['name'] %>.access.log;
+  error_log /var/log/nginx/<%= @site['name'] %>.error.log;
+
+  root <%= @document_root %>/current/public;
+  index index.html;
+
+  location / {
+    try_files $uri $uri.html $uri/index.html @unicorn;
+  }
+
+  location @unicorn {
+    proxy_read_timeout 180;
+    proxy_connect_timeout 180;
+    proxy_set_header Host $http_host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header Client-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $remote_addr;
+    proxy_pass http://<%= @site['name'] %>.unicorn;
+  }
+}
