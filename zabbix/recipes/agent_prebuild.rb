@@ -56,7 +56,7 @@ end
   
 # Download and intall zabbix agent bins.
 remote_file "#{node['zabbix']['src_dir']}/zabbix_agents_#{node['zabbix']['agent']['version']}.linux2_6.#{$zabbix_arch}.tar.gz" do
-  source "http://www.zabbix.com/downloads/#{node['zabbix']['agent']['version']}/zabbix_agents_#{node['zabbix']['agent']['version']}.linux2_6.#{$zabbix_arch}.tar.gz"
+  source "http://sourceforge.net/projects/zabbix/files/ZABBIX%20Latest%20Stable/2.2.4/zabbix-2.2.4.tar.gz/download"
   mode "0644"
   action :create_if_missing
   notifies :run, "script[install_zabbix_agent]", :immediately
