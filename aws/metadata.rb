@@ -1,3 +1,4 @@
+Test
 name              "aws"
 maintainer        "Opscode, Inc."
 maintainer_email  "cookbooks@opscode.com"
